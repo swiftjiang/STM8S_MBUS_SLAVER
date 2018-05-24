@@ -5,7 +5,7 @@
 
 //#define DEBUG_APP_SCHEDULER 1
 
-
+#define TEST_READ 1
 
 
 #endif

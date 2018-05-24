@@ -30,7 +30,7 @@
 #include "stm8s.h"
 #include "uart.h"
 #include "app_scheduler.h"
-#include "timer.h"
+//#include "timer.h"
 #include "watermeter.h"
 
 #include "test.h"
@@ -68,37 +68,98 @@ void testTimer(void)
   timer_start(&testTimerTyp);
 }
 
+void Delay_100ns(uint16_t time)  //延时函数
+{ 
+	uint16_t i,j,k;
+        for(k=0;k<time;k++)
+        {
+	for(i=0;i<350;i++)
+  		for(j=0;j<3000;j++)
+                {
+                  i=i;
+                }
+        }
+}
+
 void main(void)
 {
   CLK_HSICmd(ENABLE);//开始内部高频RC
-  CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);//不分频 
-  CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1);
-  
-  
-  scheduler_init();
-  timer_init();
+  CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV8);//不分频 
+  //CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1);  
+  //scheduler_init();
+  //timer_init();
   
   Uart_Init(9600);
+  //printf("testing...\n");
   
-  watermeter_PIN_init_pin();
-  
-  //printf("    \r\n");
-  //printf("init ok......\r\n");
-  
-  
-  GPIO_Init( GPIOB, GPIO_PIN_5,GPIO_MODE_OUT_PP_HIGH_FAST);//红色LED控制引脚
-  
+  //watermeter_PIN_init_pin();
 
 /* Infinite loop */
-  //test_RC_init_pin();
+
+  //watermeter_set_channel(1);
   
+  GPIO_Init( GPIOA, GPIO_PIN_1,GPIO_MODE_OUT_PP_LOW_FAST);//个位
+  GPIO_Init( GPIOA, GPIO_PIN_2,GPIO_MODE_OUT_PP_LOW_FAST);//十位
+  GPIO_Init( GPIOD, GPIO_PIN_1,GPIO_MODE_OUT_PP_LOW_FAST);//百位
+  GPIO_Init( GPIOB, GPIO_PIN_4,GPIO_MODE_OUT_PP_LOW_FAST);//千位
   
-  testTimer();
+  GPIO_Init( GPIOC, GPIO_PIN_3,GPIO_MODE_OUT_PP_LOW_FAST);//d1
+  GPIO_Init( GPIOB, GPIO_PIN_5,GPIO_MODE_OUT_PP_LOW_FAST);//d2
+  GPIO_Init( GPIOC, GPIO_PIN_6,GPIO_MODE_OUT_PP_LOW_FAST);//d3
+  GPIO_Init( GPIOA, GPIO_PIN_3,GPIO_MODE_OUT_PP_LOW_FAST);//d4
+  GPIO_Init( GPIOD, GPIO_PIN_4,GPIO_MODE_OUT_PP_LOW_FAST);//d5
   
-  while (1)
+  GPIO_WriteHigh( GPIOA, GPIO_PIN_1);//个位
+  GPIO_WriteHigh( GPIOA, GPIO_PIN_2);//十位
+  GPIO_WriteHigh( GPIOD, GPIO_PIN_1);//百位
+  GPIO_WriteHigh( GPIOB, GPIO_PIN_4);//千位
+  
+  GPIO_WriteHigh( GPIOC, GPIO_PIN_3);
+  GPIO_WriteHigh( GPIOB, GPIO_PIN_5);
+  GPIO_WriteHigh( GPIOC, GPIO_PIN_6);
+  GPIO_WriteHigh( GPIOA, GPIO_PIN_3);
+  GPIO_WriteHigh( GPIOD, GPIO_PIN_4);
+  
+  while(1)
   {
-    app_sched_execute();
+    ;
+    //watermeter_read_dec();
+    //app_sched_execute();
+    /*
+    Delay_100ns(65535);
+    GPIO_WriteReverse( GPIOB, GPIO_PIN_5);
+    GPIO_WriteReverse( GPIOC, GPIO_PIN_3);
+    
+    GPIO_WriteReverse( GPIOC, GPIO_PIN_6);
+    */
   }
+
+  
+  
+  /*
+  uint8_t cha = 2;
+  uint8_t recdata[5];
+  uint8_t predata[5];
+  uint8_t i,dec;  
+  watermeter_PIN_init_pin();
+  while(1)
+  {
+    watermeter_read_binary(recdata, cha);
+    dec = watermeter_binary2dec(recdata);
+    
+    if(memcmp(predata,recdata,5)!=0)
+    {
+      memcpy(predata,recdata,5);
+      for(i=0;i<5;i++)
+      {
+        printf("%d ",recdata[i]);
+      }
+      printf("  ->  dec = %d\r\n",dec);
+    }
+  }
+*/
+
+
   
 }
 
@@ -125,3 +186,29 @@ void assert_failed(u8* file, u32 line)
 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+/*
+void Delay_Ms(uint16_t time)  //延时函数
+{ 
+	uint16_t i,j,k;
+        for(k=0;k<time*3;k++)
+        {
+	for(i=0;i<550;i++)
+  		for(j=0;j<3000;j++)
+                {
+                  i=i;
+                }
+        }
+}
+void Delay_100ns(uint16_t time)  //延时函数
+{ 
+	uint16_t i,j,k;
+        for(k=0;k<time;k++)
+        {
+	for(i=0;i<350;i++)
+  		for(j=0;j<3000;j++)
+                {
+                  i=i;
+                }
+        }
+}
+*/

@@ -15,6 +15,9 @@ void test_parse(void *data,uint16_t len);
 void test_RC_init_pin(void);
 void test_RC_read_code(void);//uint8_t *data
 void test_RC_read_code_value(uint8_t* data);//uint8_t *data
+
 void set_channel(uint8_t cha);
+void set_shine(uint8_t s);
+uint8_t test_read_bit(uint8_t s);
 
 #endif

@@ -1,13 +1,13 @@
 #include "uart.h"
 
 /*系统printf函数实现*/
-/*
+
 int fputc(int ch, FILE *f)//STM8S105,printf函数重定向 
 {   while (!(UART1->SR&0x80)); 
   UART1->DR=ch;
   return ch; 
 } 
-*/
+
 #define RECV_Size 5 
 uint8_t RECV_Buffer[RECV_Size] = {0};
 __IO uint8_t RECV_Counter = 0;
@@ -85,7 +85,11 @@ INTERRUPT_HANDLER(UART1_RX_IRQHandler, 18)
  if(GetVar_RECV_Counter() ==  RECV_Size)
  {
    ResetVar_RECV_Counter();
+   //watermeter_get_data(RECV_Buffer,RECV_Size);
+   
+   disableInterrupts();
    watermeter_get_data(RECV_Buffer,RECV_Size);
+   enableInterrupts();
  }
 
   

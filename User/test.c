@@ -96,15 +96,29 @@ void test_RC_init_pin(void)
   
   GPIO_Init( GPIOA, GPIO_PIN_1,GPIO_MODE_OUT_PP_LOW_FAST);//个位
   GPIO_Init( GPIOA, GPIO_PIN_2,GPIO_MODE_OUT_PP_LOW_FAST);//十位
-  GPIO_Init( GPIOA, GPIO_PIN_3,GPIO_MODE_OUT_PP_LOW_FAST);//百位
-  GPIO_Init( GPIOC, GPIO_PIN_3,GPIO_MODE_OUT_PP_LOW_FAST);//千位
+  //GPIO_Init( GPIOA, GPIO_PIN_3,GPIO_MODE_OUT_PP_LOW_FAST);//百位
+  GPIO_Init( GPIOD, GPIO_PIN_1,GPIO_MODE_OUT_PP_LOW_FAST);//百位
+  //GPIO_Init( GPIOC, GPIO_PIN_3,GPIO_MODE_OUT_PP_LOW_FAST);//千位
+  GPIO_Init( GPIOB, GPIO_PIN_4,GPIO_MODE_OUT_PP_LOW_FAST);//千位
+  
+  //GPIO_Init( GPIOB, GPIO_PIN_4,GPIO_MODE_OUT_PP_LOW_FAST);//d1
+  GPIO_Init( GPIOC, GPIO_PIN_3,GPIO_MODE_OUT_PP_LOW_FAST);//d1
+  GPIO_Init( GPIOB, GPIO_PIN_5,GPIO_MODE_OUT_PP_LOW_FAST);//d2
+  GPIO_Init( GPIOC, GPIO_PIN_6,GPIO_MODE_OUT_PP_LOW_FAST);//d3
+  //GPIO_Init( GPIOD, GPIO_PIN_1,GPIO_MODE_OUT_PP_LOW_FAST);//d4
+  GPIO_Init( GPIOA, GPIO_PIN_3,GPIO_MODE_OUT_PP_LOW_FAST);//d4
+  GPIO_Init( GPIOD, GPIO_PIN_4,GPIO_MODE_OUT_PP_LOW_FAST);//d5
   
   GPIO_WriteLow( GPIOA, GPIO_PIN_1);//个位
   GPIO_WriteLow( GPIOA, GPIO_PIN_2);//十位
-  GPIO_WriteLow( GPIOA, GPIO_PIN_3);//百位
-  GPIO_WriteLow( GPIOC, GPIO_PIN_3);//千位
+  GPIO_WriteLow( GPIOD, GPIO_PIN_1);//百位
+  GPIO_WriteLow( GPIOB, GPIO_PIN_4);//千位
   
-  printf("init read code PIN OK !\r\n");
+  GPIO_WriteLow( GPIOC, GPIO_PIN_3);
+  GPIO_WriteLow( GPIOB, GPIO_PIN_5);
+  GPIO_WriteLow( GPIOC, GPIO_PIN_6);
+  GPIO_WriteLow( GPIOA, GPIO_PIN_3);
+  GPIO_WriteLow( GPIOD, GPIO_PIN_4);
   
 }
 void test_RC_read_code(void)//uint8_t *data
@@ -160,11 +174,21 @@ void test_RC_read_code_value(uint8_t* data)//uint8_t *data
 
 void set_channel(uint8_t cha)
 {
-  //GPIO_WriteLow  GPIO_WriteHigh
   GPIO_WriteLow( GPIOA, GPIO_PIN_1);//个位
   GPIO_WriteLow( GPIOA, GPIO_PIN_2);//十位
-  GPIO_WriteLow( GPIOA, GPIO_PIN_3);//百位
-  GPIO_WriteLow( GPIOC, GPIO_PIN_3);//千位
+  GPIO_WriteLow( GPIOD, GPIO_PIN_1);//百位
+  GPIO_WriteLow( GPIOB, GPIO_PIN_4);//千位
+  if(cha == 0)
+    return;
+  if(cha == 1)
+    GPIO_WriteHigh( GPIOA, GPIO_PIN_1);//个位
+  if(cha == 2)
+    GPIO_WriteHigh( GPIOA, GPIO_PIN_2);//十位
+  if(cha == 3)
+    GPIO_WriteHigh( GPIOD, GPIO_PIN_1);//百位
+  if(cha == 4)
+    GPIO_WriteHigh( GPIOB, GPIO_PIN_4);//千位
+  /*
   switch(cha)
   {
   case 1:
@@ -179,6 +203,135 @@ void set_channel(uint8_t cha)
   case 4:
     GPIO_WriteHigh( GPIOC, GPIO_PIN_3);//千位
     break;
-    
+  default:
+    break;
   }
+*/
+}
+
+void set_shine(uint8_t s)
+{
+  s = s&0x07;
+  GPIO_WriteLow( GPIOC, GPIO_PIN_3);
+  GPIO_WriteLow( GPIOB, GPIO_PIN_5);
+  GPIO_WriteLow( GPIOC, GPIO_PIN_6);
+  GPIO_WriteLow( GPIOA, GPIO_PIN_3);
+  GPIO_WriteLow( GPIOD, GPIO_PIN_4);
+  
+  if(s == 0)
+    return;
+  if(s == 1)
+  {
+    GPIO_WriteHigh( GPIOC, GPIO_PIN_3);//
+    return;
+  }
+  if(s == 2)
+  {
+    GPIO_WriteHigh( GPIOB, GPIO_PIN_5);//
+    return;
+  }
+  if(s == 3)
+  {
+    GPIO_WriteHigh( GPIOC, GPIO_PIN_6);//
+    return;
+  }
+  if(s == 4)
+  {
+    GPIO_WriteHigh( GPIOA, GPIO_PIN_3);//
+    return;
+  }
+  if(s == 5)
+  {
+    GPIO_WriteHigh( GPIOD, GPIO_PIN_4);//
+    return;
+  }
+  
+  /*
+  switch(s)
+  {
+  case 1:
+    GPIO_WriteHigh( GPIOB, GPIO_PIN_4);//
+    break;
+  case 2:
+    GPIO_WriteHigh( GPIOB, GPIO_PIN_5);//
+    break;
+  case 3:
+    GPIO_WriteHigh( GPIOC, GPIO_PIN_6);//
+    break;
+  case 4:
+    GPIO_WriteHigh( GPIOD, GPIO_PIN_1);//
+    break;
+  case 5:
+    GPIO_WriteHigh( GPIOD, GPIO_PIN_4);//
+    break;
+  default:
+    break;
+  }
+*/
+}
+
+uint8_t test_read_bit(uint8_t bit)
+{
+  uint8_t value=0;
+  
+  if(bit == 1)
+  {
+    if(GPIO_ReadInputPin(GPIOC, GPIO_PIN_7))
+      value = 1;
+    return value;
+  }
+  if(bit == 2)
+  {
+    if(GPIO_ReadInputPin(GPIOD, GPIO_PIN_2))
+      value = 1;
+    return value;
+  }
+  if(bit == 3)
+  {
+    if(GPIO_ReadInputPin(GPIOD, GPIO_PIN_3))
+      value = 1;
+    return value;
+  }
+  if(bit == 4)
+  {
+    if(GPIO_ReadInputPin(GPIOC, GPIO_PIN_4))
+      value = 1;
+    return value;
+  }
+  if(bit == 5)
+  {
+    if(GPIO_ReadInputPin(GPIOC, GPIO_PIN_5))
+      value = 1;
+    return value;
+  }
+    
+  /*
+  switch(bit)
+  {
+  case 1:
+    if(GPIO_ReadInputPin(GPIOC, GPIO_PIN_7))
+    value = 1;
+    break;
+  case 2:
+    if(GPIO_ReadInputPin(GPIOD, GPIO_PIN_2))
+    value = 1;
+    break;
+  case 3:
+    if(GPIO_ReadInputPin(GPIOD, GPIO_PIN_3))
+    value = 1;
+    break;
+  case 4:
+    if(GPIO_ReadInputPin(GPIOC, GPIO_PIN_4))
+    value = 1;
+    break;
+  case 5:
+    if(GPIO_ReadInputPin(GPIOC, GPIO_PIN_5))
+    value = 1;
+    break;
+  default:
+    break;
+  }
+*/
+  return value;
+  
 }

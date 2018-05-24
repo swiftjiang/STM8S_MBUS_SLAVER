@@ -1,9 +1,16 @@
 #ifndef __WATERMETER_H__
 #define __WATERMETER_H__
 
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "watermeter.h"
-#include "test.h"
+#include "app_scheduler.h"
+#include "uart.h"
+#include "debug.h"
+
+
+
 
 void watermeter_get_data(uint8_t *data,uint8_t len);
 
@@ -22,13 +29,18 @@ void watermeter_PIN_init_pin(void);
 
 void watermeter_set_channel(uint8_t cha);
 
-void watermeter_read_BIT_value(uint8_t* data,uint8_t len);
+void watermeter_set_shine(uint8_t s);
 
-uint8_t watermeter_code2value(uint8_t* data,uint8_t len);
+uint8_t watermeter_binary2dec(uint8_t *data);
 
-void watermeter_get_value(uint8_t* data,uint8_t len);
+void watermeter_read_binary(uint8_t *data, uint8_t cha);
 
-void watermeter_send_value();
+uint16_t watermeter_read_dec(void);
+
+
+
+
+
 
 
 #endif
